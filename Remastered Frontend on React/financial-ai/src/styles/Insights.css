@@ -1,0 +1,127 @@
+.insights {
+  background: var(--card-bg);
+  border-radius: 15px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 15px var(--shadow-color);
+  margin: 2rem 0;
+  border: 1px solid var(--border-color);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.insights-header {
+  margin-bottom: 1.5rem;
+}
+
+.insights-header h2 {
+  margin: 0 0 0.5rem 0;
+  color: var(--text-color);
+  transition: color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.insights-header p {
+  margin: 0;
+  color: var(--text-color);
+  opacity: 0.7;
+  font-size: 0.9rem;
+  transition: color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.insights-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.insight-card {
+  background: var(--card-bg);
+  border-radius: 12px;
+  padding: 1.25rem;
+  transition: all 0.3s ease;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 2px 8px var(--shadow-color);
+}
+
+.insight-card:hover {
+  background: var(--hover-color);
+  box-shadow: 0 5px 15px var(--shadow-color);
+  transform: translateY(-2px);
+}
+
+.insight-card.positive {
+  border-left: 4px solid var(--positive-color);
+}
+
+.insight-card.negative {
+  border-left: 4px solid var(--negative-color);
+}
+
+.insight-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.insight-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.insight-header h3 {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--text-color);
+  transition: color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.insight-description {
+  margin: 0 0 1rem 0;
+  color: var(--text-color);
+  opacity: 0.8;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  transition: color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.insight-amount {
+  font-weight: 700;
+  font-size: 1.25rem;
+  transition: color 0.3s ease;
+}
+
+/* Theme-specific adjustments */
+body.theme-dark .insight-card {
+  background: rgba(30, 30, 30, 0.7);
+}
+
+body.theme-vibrant .insight-card {
+  background: rgba(255, 142, 142, 0.3);
+}
+
+body.theme-neon .insight-card {
+  background: rgba(26, 26, 46, 0.7);
+  box-shadow: 0 2px 8px rgba(0, 255, 204, 0.1);
+}
+
+body.theme-ocean .insight-card {
+  background: rgba(255, 255, 255, 0.7);
+}
+
+body.theme-sunset .insight-card {
+  background: rgba(255, 245, 230, 0.7);
+}
+
+@media (max-width: 768px) {
+  .insights {
+    padding: 1rem;
+  }
+  
+  .insights-grid {
+    grid-template-columns: 1fr;
+  }
+}

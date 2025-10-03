@@ -1,0 +1,128 @@
+.smart-alert {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  width: 350px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  z-index: 1000;
+  overflow: hidden;
+  border-left: 4px solid #667eea;
+}
+
+.smart-alert.warning {
+  border-left-color: #FF6B6B;
+  animation: pulse 2s infinite;
+}
+
+.smart-alert.success {
+  border-left-color: #4ECDC4;
+}
+
+.smart-alert.info {
+  border-left-color: #45B7D1;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  }
+  50% {
+    box-shadow: 0 10px 35px rgba(255, 107, 107, 0.3);
+  }
+  100% {
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  }
+}
+
+.alert-content {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  gap: 0.75rem;
+}
+
+.alert-icon {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(102, 126, 234, 0.1);
+  color: #667eea;
+}
+
+.smart-alert.warning .alert-icon {
+  background: rgba(255, 107, 107, 0.1);
+  color: #FF6B6B;
+}
+
+.smart-alert.success .alert-icon {
+  background: rgba(78, 205, 196, 0.1);
+  color: #4ECDC4;
+}
+
+.smart-alert.info .alert-icon {
+  background: rgba(69, 183, 209, 0.1);
+  color: #45B7D1;
+}
+
+.alert-message {
+  flex: 1;
+  font-size: 0.9rem;
+  color: #333;
+  line-height: 1.4;
+}
+
+.dismiss-button {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: #999;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.dismiss-button:hover {
+  background: #f1f3f4;
+  color: #666;
+}
+
+.alert-amount {
+  padding: 0 1rem 0.5rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #333;
+  text-align: center;
+}
+
+.alert-chart {
+  height: 6px;
+  background: #f1f3f4;
+  margin: 0 1rem 1rem;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.chart-bar {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+
+@media (max-width: 768px) {
+  .smart-alert {
+    width: calc(100% - 2rem);
+    top: 0.5rem;
+    right: 0.5rem;
+  }
+}

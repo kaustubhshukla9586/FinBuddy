@@ -1,0 +1,602 @@
+.dashboard {
+  padding: 2rem;
+  background-color: var(--bg-color);
+  min-height: 100vh;
+  transition: background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow-x: hidden;
+}
+
+.dashboard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 300px;
+  background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+  opacity: 0.05;
+  z-index: -1;
+}
+
+.dashboard-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.dashboard-header h1 {
+  font-size: 2.5rem;
+  color: var(--text-color);
+  margin-bottom: 0.5rem;
+  transition: color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.dashboard-header p {
+  font-size: 1.2rem;
+  color: var(--text-color);
+  opacity: 0.8;
+  margin-bottom: 2rem;
+  transition: color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.filters {
+  background: var(--card-gradient);
+  border-radius: 15px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 15px var(--shadow-color);
+  margin-bottom: 2rem;
+  position: sticky;
+  top: 1rem;
+  z-index: 100;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid var(--border-color);
+  backdrop-filter: blur(10px);
+}
+
+.category-filter-tabs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.filter-tab {
+  padding: 0.5rem 1.5rem;
+  border-radius: 50px;
+  border: 2px solid var(--border-color);
+  background: var(--card-bg);
+  color: var(--text-color);
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.filter-tab.active,
+.filter-tab:hover {
+  background: linear-gradient(45deg, var(--gradient-start), var(--gradient-end));
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.filters:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px var(--shadow-color);
+}
+
+.timeframe-selector {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.timeframe-selector button {
+  padding: 0.5rem 1.5rem;
+  border-radius: 50px;
+  border: 2px solid var(--border-color);
+  background: var(--card-bg);
+  color: var(--text-color);
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.timeframe-selector button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, rgba(255,255,255,0.2), rgba(255,255,255,0));
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
+}
+
+.timeframe-selector button:hover::before {
+  transform: translateX(100%);
+}
+
+.timeframe-selector button.active,
+.timeframe-selector button:hover {
+  background: linear-gradient(45deg, var(--gradient-start), var(--gradient-end));
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.category-toggles {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.category-toggle {
+  padding: 0.5rem 1rem;
+  border-radius: 50px;
+  border: 2px solid var(--border-color);
+  background: transparent;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  color: var(--text-color);
+  position: relative;
+  overflow: hidden;
+}
+
+.category-toggle::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, rgba(255,255,255,0.1), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+  z-index: -1;
+}
+
+.category-toggle:hover::before {
+  transform: translateX(0);
+}
+
+.category-toggle:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.category-toggle.active {
+  color: white !important;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.charts-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.chart-container {
+  background: var(--card-gradient);
+  border-radius: 15px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 15px var(--shadow-color);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid var(--border-color);
+  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: visible; /* Ensure charts aren't clipped */
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 480px; /* Increased min-height for better containment */
+  /* Add smooth transition for all properties */
+  transition: all 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.chart-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
+  /* Add transition for the accent bar */
+  transition: all 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.chart-container:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px var(--shadow-color);
+}
+
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-shrink: 0;
+}
+
+.chart-header h2 {
+  margin: 0;
+  color: var(--text-color);
+  transition: color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  padding-left: 15px;
+}
+
+.chart-header h2::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent-color);
+}
+
+.chart-wrapper {
+  flex: 1;
+  min-height: 400px; /* Increased min-height for better chart containment */
+  margin-top: 1rem;
+  width: 100%;
+  background: transparent;
+  position: relative;
+  /* Ensure proper sizing for charts */
+  height: 100%;
+  overflow: visible; /* Ensure charts aren't clipped */
+}
+
+.heatmap-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  flex: 1;
+  min-height: 400px; /* Increased min-height for better containment */
+  background: transparent;
+  position: relative;
+  overflow: visible; /* Ensure heatmap isn't clipped */
+}
+
+.heatmap-labels {
+  display: flex;
+  margin-left: 60px;
+  margin-bottom: 0.5rem;
+}
+
+.time-label {
+  flex: 1;
+  text-align: center;
+  font-weight: 500;
+  color: var(--text-color);
+  transition: color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.heatmap-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+  /* Add transition for smooth hover effects */
+  transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.day-label {
+  width: 60px;
+  font-weight: 500;
+  color: var(--text-color);
+  transition: color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.heatmap-cell {
+  flex: 1;
+  height: 45px; /* Increased height */
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1); /* Smoother transition */
+  border: 1px solid var(--border-color);
+  position: relative;
+  overflow: hidden;
+  background: transparent;
+  /* Add box-shadow transition */
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.heatmap-cell::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, rgba(255,255,255,0.2), rgba(255,255,255,0));
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
+}
+
+.heatmap-cell:hover::before {
+  transform: translateX(100%);
+}
+
+.heatmap-cell:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15); /* Enhanced shadow on hover */
+}
+
+/* Specific fixes for pie chart container */
+.chart-container:has(.recharts-pie) {
+  min-height: 500px; /* Increased height for pie chart */
+}
+
+/* Specific fixes for heatmap container */
+.chart-container:has(.heatmap-container) {
+  min-height: 500px; /* Increased height for heatmap */
+}
+
+/* Ensure charts fill their containers properly */
+.recharts-wrapper {
+  overflow: visible !important; /* Prevent clipping of chart elements */
+}
+
+.recharts-surface {
+  overflow: visible !important; /* Prevent clipping of chart elements */
+}
+
+.transactions-section {
+  background: var(--card-gradient);
+  border-radius: 15px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 15px var(--shadow-color);
+  margin-top: 2rem;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid var(--border-color);
+  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+}
+
+.transactions-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
+}
+
+.transactions-section:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px var(--shadow-color);
+}
+
+.transactions-section h2 {
+  margin-top: 0;
+  color: var(--text-color);
+  margin-bottom: 1.5rem;
+  transition: color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  padding-left: 15px;
+}
+
+.transactions-section h2::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent-color);
+}
+
+.transactions-table {
+  width: 100%;
+}
+
+.table-header {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr 1fr 1fr;
+  padding: 1rem;
+  background: rgba(0,0,0,0.05);
+  border-radius: 8px;
+  font-weight: 600;
+  color: var(--text-color);
+  transition: color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid var(--border-color);
+}
+
+.transaction-row {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr 1fr 1fr;
+  padding: 1rem;
+  border-bottom: 1px solid var(--border-color);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+}
+
+.transaction-row:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.transaction-row:hover {
+  background: var(--hover-color);
+  transform: translateX(5px);
+}
+
+.category-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 50px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: white;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.transaction-type-indicator {
+  margin-left: 0.25rem;
+  font-size: 0.7rem;
+  opacity: 0.8;
+}
+
+.amount {
+  font-weight: 600;
+  color: var(--text-color);
+  transition: color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Theme-specific enhancements */
+.theme-dark .dashboard::before {
+  opacity: 0.1;
+}
+
+.theme-vibrant .dashboard-header h1 {
+  background: linear-gradient(90deg, #ffd166, #ff6b6b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.theme-neon .dashboard-header h1 {
+  background: linear-gradient(90deg, #00ffcc, #ff00ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.theme-ocean .dashboard-header h1 {
+  background: linear-gradient(90deg, #1890ff, #52c41a);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.theme-sunset .dashboard-header h1 {
+  background: linear-gradient(90deg, #fa8c16, #f5222d);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+@media (max-width: 768px) {
+  .dashboard {
+    padding: 1rem;
+  }
+  
+  .charts-section {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .chart-container {
+    padding: 1rem;
+    min-height: 350px;
+  }
+  
+  .chart-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .chart-wrapper {
+    min-height: 250px;
+    margin-top: 0.75rem;
+  }
+  
+  .filters {
+    padding: 1rem;
+  }
+  
+  .table-header,
+  .transaction-row {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+  
+  .table-header div:nth-child(3),
+  .table-header div:nth-child(4),
+  .transaction-row div:nth-child(3),
+  .transaction-row div:nth-child(4) {
+    display: none;
+  }
+  
+  .heatmap-container {
+    gap: 0.5rem;
+    min-height: 250px;
+  }
+  
+  .heatmap-row {
+    gap: 0.5rem;
+  }
+  
+  .heatmap-cell {
+    height: 35px;
+  }
+  
+  .transactions-section {
+    padding: 1rem;
+    margin-top: 1.5rem;
+  }
+  
+  .chart-container {
+    min-height: 350px;
+  }
+  
+  .chart-wrapper {
+    min-height: 280px;
+  }
+  
+  .heatmap-container {
+    min-height: 280px;
+  }
+  
+  .chart-container:has(.recharts-pie),
+  .chart-container:has(.heatmap-container) {
+    min-height: 350px;
+  }
+  
+  .chart-container {
+    min-height: 400px;
+  }
+  
+  .chart-wrapper {
+    min-height: 320px;
+  }
+  
+  .heatmap-container {
+    min-height: 320px;
+  }
+  
+  .chart-container:has(.recharts-pie),
+  .chart-container:has(.heatmap-container) {
+    min-height: 400px;
+  }
+  
+  .heatmap-cell {
+    height: 35px; /* Adjust for mobile */
+  }
+}

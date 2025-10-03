@@ -1,0 +1,63 @@
+.export-buttons {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.export-button,
+.share-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: none;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.export-button {
+  background: #667eea;
+  color: white;
+}
+
+.export-button:hover {
+  background: #5a6fd8;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+}
+
+.share-button {
+  background: #f1f3f4;
+  color: #333;
+}
+
+.share-button:hover {
+  background: #e0e0e0;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+@media (max-width: 768px) {
+  .export-buttons {
+    justify-content: center;
+  }
+  
+  .export-button,
+  .share-button {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8rem;
+  }
+  
+  .export-button span,
+  .share-button span {
+    display: none;
+  }
+  
+  .export-button svg,
+  .share-button svg {
+    margin: 0;
+  }
+}
