@@ -45,5 +45,5 @@ It provides a **graphical dashboard** of your expenses, runs **real-time transac
 
 ### 1. Clone the Repository  
 ```bash
-git clone [https://github.com/your-username/finbuddy.git](https://github.com/kaustubhshukla9586/FinBuddy.git)
+git clone https://github.com/kaustubhshukla9586/FinBuddy.git
 cd finbuddy
