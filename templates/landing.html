@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Finance Tracker</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="{% static 'js/chart.js' %}"></script>
+    <script src="{% static 'js/ai-agent.js' %}"></script>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <h1>Finance Tracker</h1>
+            <nav class="menu">
+                <a href="#dashboard">Dashboard</a>
+                <a href="#transactions">Transactions</a>
+                <a href="#cash">Cash</a>
+                <a href="{% url 'ai_agent' %}">AI Assistant</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section id="dashboard" class="dashboard">
+            <div class="cards">
+                <div class="card">
+                    <h3>Total Income</h3>
+                    <p class="amount">${{ income_total }}</p>
+                </div>
+                <div class="card">
+                    <h3>Total Expenses</h3>
+                    <p class="amount expense">${{ expense_total }}</p>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <h3>Cash vs Online Transactions</h3>
+                <div style="margin-bottom: 10px; color: #9ca3af; font-size: 12px;">
+                    Debug: Cash Income={{ cash_income }}, Cash Expense={{ cash_expense }}, Online Income={{ online_income }}, Online Expense={{ online_expense }}
+                </div>
+                <div id="chart-status" style="margin-bottom: 10px; color: #9ca3af; font-size: 12px;">
+                    Chart Status: Loading...
+                </div>
+                <canvas id="expensesChart" width="400" height="400"></canvas>
+                <div id="fallback-chart" style="display: none; margin-top: 20px; padding: 20px; background: rgba(17,24,39,0.6); border-radius: 10px;">
+                    <h4 style="margin: 0 0 15px; color: #e5e7eb;">Transaction Breakdown (Chart.js unavailable)</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 14px;">
+                        <div style="color: #22c55e;">Cash Income: ${{ cash_income|floatformat:2 }}</div>
+                        <div style="color: #ef4444;">Cash Expense: ${{ cash_expense|floatformat:2 }}</div>
+                        <div style="color: #06b6d4;">Online Income: ${{ online_income|floatformat:2 }}</div>
+                        <div style="color: #f59e0b;">Online Expense: ${{ online_expense|floatformat:2 }}</div>
+                    </div>
+                    <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1);">
+                        <strong style="color: #e5e7eb;">Total Income: ${{ income_total|floatformat:2 }}</strong><br>
+                        <strong style="color: #e5e7eb;">Total Expense: ${{ expense_total|floatformat:2 }}</strong><br>
+                        <strong style="color: {% if income_total > expense_total %}#22c55e{% else %}#ef4444{% endif %}">
+                            Net Balance: ${{ income_total|add:expense_total|floatformat:2 }}
+                        </strong>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="cards" style="margin-top: 16px;">
+                <div class="card">
+                    <h3>Cash Income</h3>
+                    <p class="amount">${{ cash_income|floatformat:2 }}</p>
+                </div>
+                <div class="card">
+                    <h3>Cash Expense</h3>
+                    <p class="amount expense">${{ cash_expense|floatformat:2 }}</p>
+                </div>
+                <div class="card">
+                    <h3>Online Income</h3>
+                    <p class="amount">${{ online_income|floatformat:2 }}</p>
+                </div>
+                <div class="card">
+                    <h3>Online Expense</h3>
+                    <p class="amount expense">${{ online_expense|floatformat:2 }}</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="transactions" class="transactions">
+            <h2>Recent Transactions</h2>
+            <div style="margin: 8px 0 12px;">
+                <a href="{% url 'all_transactions' %}" class="btn-primary" style="text-decoration:none; display:inline-block;">Show all transactions</a>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Description</th>
+                            <th>Amount</th>
+                            <th>Type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for t in transactions %}
+                            <tr>
+                                <td>{{ t.date }}</td>
+                                <td>{{ t.description }}</td>
+                                <td class="{{ t.type }}">${{ t.amount|floatformat:2 }}</td>
+                                <td class="type-pill {{ t.type }}">{{ t.type|title }}</td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="4" style="text-align:center;">No transactions</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="cash" class="cash">
+            <h2>Cash Transaction</h2>
+            <form class="cash-form" method="post" action="{% url 'cash' %}">
+                {% csrf_token %}
+                <div class="row">
+                    <label>Description
+                        <input type="text" name="cash_desc" placeholder="e.g. ATM Withdrawal" required />
+                    </label>
+                    <label>Amount
+                        <input type="number" step="0.01" name="cash_amount" placeholder="0.00" required />
+                    </label>
+                </div>
+                <div class="row">
+                    <label>Type
+                        <select name="cash_type" required>
+                            <option value="income">Income</option>
+                            <option value="expense">Expense</option>
+                        </select>
+                    </label>
+                    <label>Source/Destination
+                        <input type="text" name="cash_source" placeholder="e.g. Wallet / Bank / Shop" />
+                    </label>
+                    <button type="submit" class="btn-primary">Add</button>
+                </div>
+            </form>
+            <div style="margin-top:10px;">
+                <a class="btn-primary" style="text-decoration:none; display:inline-block;" href="{% url 'cash' %}">Open cash transactions</a>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">© {{ now|default:2025 }} Finance Tracker</div>
+    </footer>
+
+    <!-- Floating AI Chat Icon -->
+    <div id="floating-chat" class="floating-chat">
+        <div class="chat-icon" onclick="toggleChat()">
+            <span class="chat-icon-emoji">🤖</span>
+        </div>
+        <div class="chat-tooltip">Ask me about your finances!</div>
+    </div>
+
+    <script>
+        // Pass chart data to external JavaScript file
+        window.chartLabels = '{{ chart_labels|safe|escapejs }}';
+        window.chartData = '{{ chart_data|safe|escapejs }}';
+        
+        console.log('Chart data passed to external script:', {
+            labels: window.chartLabels,
+            data: window.chartData
+        });
+
+        // Floating chat functionality
+        function toggleChat() {
+            window.location.href = "{% url 'ai_agent' %}";
+        }
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Financial Assistant</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <h1>AI Financial Assistant</h1>
+            <nav class="menu">
+                <a href="{% url 'landing' %}">Home</a>
+                <a href="{% url 'all_transactions' %}">Transactions</a>
+                <a href="{% url 'cash' %}">Cash</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="ai-agent">
+            <h2>Your Personal Financial Assistant</h2>
+            <div class="ai-container">
+                <div class="ai-chat">
+                    <div id="ai-messages" class="ai-messages">
+                        <div class="ai-message ai-bot">
+                            <div class="ai-avatar">🤖</div>
+                            <div class="ai-content">
+                                <p>Hello! I'm your AI financial assistant. I can analyze your transactions, provide spending insights, and help you understand your financial patterns. Ask me anything about your finances!</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ai-input-container">
+                        <input type="text" id="ai-input" placeholder="Ask about your spending patterns, get insights, or request analysis..." />
+                        <div class="ai-actions">
+                            <button id="ai-send" class="btn-primary">Send</button>
+                            <button id="ai-regenerate" class="btn-secondary">Regenerate</button>
+                            <button id="ai-clear" class="btn-secondary">Clear</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="ai-insights">
+                    <h3>Quick Insights</h3>
+                    <div id="ai-suggestions" class="ai-suggestions">
+                        <div class="ai-suggestions-title">Go-to prompts</div>
+                        <ul>
+                            <li><button data-suggest="Give me a spending analysis">Spending analysis</button></li>
+                            <li><button data-suggest="What is my savings rate?">Savings rate</button></li>
+                            <li><button data-suggest="Compare cash vs digital payments">Cash vs digital</button></li>
+                            <li><button data-suggest="Any tips to reduce expenses?">Reduce expenses</button></li>
+                        </ul>
+                    </div>
+                    <div class="insight-cards">
+                        <div class="insight-card">
+                            <h4>💡 Spending Trend</h4>
+                            <p id="spending-trend">Analyzing your spending patterns...</p>
+                        </div>
+                        <div class="insight-card">
+                            <h4>🎯 Top Category</h4>
+                            <p id="top-category">Identifying your highest expense...</p>
+                        </div>
+                        <div class="insight-card">
+                            <h4>📊 Budget Health</h4>
+                            <p id="budget-health">Evaluating your financial health...</p>
+                        </div>
+                        <div class="insight-card">
+      <picture>
+        <source media="(min-width: )" srcset="">
+        <img src="" alt="">
+      </picture>                      <h4>💡 Recommendation</h4>
+                            <p id="ai-recommendation">Generating personalized advice...</p>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">© {{ now|default:2025 }} Finance Tracker</div>
+    </footer>
+
+    <script>
+        // Pass chart data to external JavaScript file
+        window.transactionData = JSON.parse('{{ transactions|safe|escapejs }}');
+        window.cashIncome = {{ cash_income }};
+        window.cashExpense = {{ cash_expense }};
+        window.onlineIncome = {{ online_income }};
+        window.onlineExpense = {{ online_expense }};
+        window.totalIncome = {{ income_total }};
+        window.totalExpense = {{ expense_total }};
+        
+        console.log('AI Agent data loaded:', {
+            transactions: window.transactionData,
+            cashIncome: window.cashIncome,
+            cashExpense: window.cashExpense,
+            totalIncome: window.totalIncome,
+            totalExpense: window.totalExpense
+        });
+    </script>
+    <script src="{% static 'js/ai-agent.js' %}"></script>
+</body>
+</html>

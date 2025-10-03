@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Delete Transaction</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <h1>Delete Transaction</h1>
+            <nav class="menu">
+                <a href="{% url 'cash' %}">Cancel</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="cash-form">
+            <p>Are you sure you want to remove this transaction?</p>
+            <p><strong>{{ t.created_at|date:"Y-m-d H:i" }}</strong> - {{ t.description }} ({{ t.type|title }} ${{ t.amount|floatformat:2 }})</p>
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn-primary" style="background:#ef4444;">Yes, remove</button>
+            </form>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">© 2025 Finance Tracker</div>
+    </footer>
+</body>
+</html>
+
+
+

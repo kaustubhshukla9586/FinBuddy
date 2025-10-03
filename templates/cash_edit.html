@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Cash Transaction</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <h1>Edit Cash Transaction</h1>
+            <nav class="menu">
+                <a href="{% url 'cash' %}">Back</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <form class="cash-form" method="post">
+            {% csrf_token %}
+            <div class="row">
+                <label>Description
+                    <input type="text" name="cash_desc" value="{{ t.description }}" required />
+                </label>
+                <label>Amount
+                    <input type="number" step="0.01" name="cash_amount" value="{{ t.amount }}" required />
+                </label>
+                <label>Type
+                    <select name="cash_type" required>
+                        <option value="income" {% if t.type == 'income' %}selected{% endif %}>Income</option>
+                        <option value="expense" {% if t.type == 'expense' %}selected{% endif %}>Expense</option>
+                    </select>
+                </label>
+            </div>
+            <div class="row">
+                <label>Source/Destination
+                    <input type="text" name="cash_source" value="{{ t.source_or_destination }}" />
+                </label>
+                <button type="submit" class="btn-primary">Save</button>
+            </div>
+        </form>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">© 2025 Finance Tracker</div>
+    </footer>
+</body>
+</html>
+
+
+

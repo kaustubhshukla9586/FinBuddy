@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>All Transactions</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <h1>All Transactions</h1>
+            <nav class="menu">
+                <a href="{% url 'landing' %}">Home</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container transactions">
+        <form method="get" class="cash-form" style="margin-bottom:14px;">
+            <label>Sort by date
+                <select name="sort" onchange="this.form.submit()">
+                    <option value="desc" {% if sort != 'asc' %}selected{% endif %}>Newest first</option>
+                    <option value="asc" {% if sort == 'asc' %}selected{% endif %}>Oldest first</option>
+                </select>
+            </label>
+        </form>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Description</th>
+                        <th>Amount</th>
+                        <th>Type</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for t in transactions %}
+                        <tr>
+                            <td>{{ t.date }}</td>
+                            <td>{{ t.description }}</td>
+                            <td class="{{ t.type }}">${{ t.amount|floatformat:2 }}</td>
+                            <td class="type-pill {{ t.type }}">{{ t.type|title }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="4" style="text-align:center;">No transactions</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">© 2025 Finance Tracker</div>
+    </footer>
+</body>
+</html>
+
+
+

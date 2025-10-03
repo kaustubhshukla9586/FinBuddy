@@ -1,0 +1,181 @@
+{
+  "mongodb": {
+    "atlas_uri": "mongodb+srv://yashucooldude06_db_user:S8UHx6rAlJb9iEIP@<cluster>.mongodb.net/?retryWrites=true&w=majority",
+    "atlas_uri_env": "MONGO_ATLAS_URI",
+    "database": "finance_tracker",
+    "bill_split_database": "bill_split_db",
+    "collections": {
+      "expenses": "expenses",
+      "incomes": "incomes"
+    },
+    "bill_split_collections": {
+      "users": "users",
+      "bills": "bills",
+      "bill_items": "bill_items",
+      "transactions": "transactions",
+      "history": "history"
+    },
+    "options": {
+      "tls": true,
+      "appName": "FinanceTracker"
+    }
+  },
+  "schema": {
+    "expense": {
+      "fields": [
+        { "name": "date", "type": "date", "required": true, "format": "YYYY-MM-DD" },
+        { "name": "description", "type": "string", "required": true },
+        { "name": "amount", "type": "number", "required": true },
+        { "name": "category", "type": "string", "required": false },
+        { "name": "method", "type": "string", "enum": ["cash", "online"], "required": false }
+      ]
+    },
+    "income": {
+      "fields": [
+        { "name": "date", "type": "date", "required": true, "format": "YYYY-MM-DD" },
+        { "name": "description", "type": "string", "required": true },
+        { "name": "amount", "type": "number", "required": true },
+        { "name": "source", "type": "string", "required": false },
+        { "name": "method", "type": "string", "enum": ["cash", "online"], "required": false }
+      ]
+    }
+  },
+  "export": {
+    "enabled": true,
+    "collections": [
+      {
+        "name": "expenses",
+        "output_file": "exports/expenses_export.json",
+        "projection": ["date", "description", "amount", "category", "method"],
+        "query": {}
+      },
+      {
+        "name": "incomes",
+        "output_file": "exports/incomes_export.json",
+        "projection": ["date", "description", "amount", "source", "method"],
+        "query": {}
+      }
+    ]
+  },
+  "import": {
+    "enabled": true,
+    "collections": [
+      {
+        "name": "expenses",
+        "input_file": "imports/expenses_import.json",
+        "upsert": false,
+        "date_fields": ["date"]
+      },
+      {
+        "name": "incomes",
+        "input_file": "imports/incomes_import.json",
+        "upsert": false,
+        "date_fields": ["date"]
+      }
+    ]
+  },
+  "bill_split_schema": {
+    "user": {
+      "fields": [
+        { "name": "user_id", "type": "string", "required": true },
+        { "name": "name", "type": "string", "required": true },
+        { "name": "upi_id", "type": "string", "required": true },
+        { "name": "phone", "type": "string", "required": false },
+        { "name": "email", "type": "string", "required": false },
+        { "name": "created_at", "type": "date", "required": true },
+        { "name": "updated_at", "type": "date", "required": true }
+      ]
+    },
+    "bill": {
+      "fields": [
+        { "name": "bill_id", "type": "string", "required": true },
+        { "name": "title", "type": "string", "required": true },
+        { "name": "description", "type": "string", "required": false },
+        { "name": "total_amount", "type": "number", "required": true },
+        { "name": "split_type", "type": "string", "enum": ["equal", "custom"], "required": true },
+        { "name": "is_settled", "type": "boolean", "required": true },
+        { "name": "created_at", "type": "date", "required": true },
+        { "name": "updated_at", "type": "date", "required": true }
+      ]
+    },
+    "bill_item": {
+      "fields": [
+        { "name": "item_id", "type": "string", "required": true },
+        { "name": "bill_id", "type": "string", "required": true },
+        { "name": "user_id", "type": "string", "required": true },
+        { "name": "amount", "type": "number", "required": true },
+        { "name": "is_paid", "type": "boolean", "required": true },
+        { "name": "paid_at", "type": "date", "required": false },
+        { "name": "notes", "type": "string", "required": false },
+        { "name": "created_at", "type": "date", "required": true }
+      ]
+    },
+    "transaction": {
+      "fields": [
+        { "name": "transaction_id", "type": "string", "required": true },
+        { "name": "user_id", "type": "string", "required": true },
+        { "name": "bill_id", "type": "string", "required": true },
+        { "name": "amount", "type": "number", "required": true },
+        { "name": "type", "type": "string", "enum": ["payment", "refund"], "required": true },
+        { "name": "status", "type": "string", "enum": ["pending", "completed", "failed"], "required": true },
+        { "name": "created_at", "type": "date", "required": true }
+      ]
+    }
+  },
+  "examples": {
+    "expense": {
+      "date": "2025-10-14",
+      "description": "Grocery Shopping",
+      "amount": 150.75,
+      "category": "food",
+      "method": "online"
+    },
+    "income": {
+      "date": "2025-10-01",
+      "description": "Salary",
+      "amount": 2500.0,
+      "source": "Company",
+      "method": "online"
+    },
+    "bill_split_user": {
+      "user_id": "user_123",
+      "name": "John Doe",
+      "upi_id": "john@paytm",
+      "phone": "+91 9876543210",
+      "email": "john@example.com",
+      "created_at": "2025-10-14T10:30:00Z",
+      "updated_at": "2025-10-14T10:30:00Z"
+    },
+    "bill_split_bill": {
+      "bill_id": "bill_456",
+      "title": "Dinner at Restaurant",
+      "description": "Group dinner with friends",
+      "total_amount": 500.00,
+      "split_type": "equal",
+      "is_settled": false,
+      "created_at": "2025-10-14T19:00:00Z",
+      "updated_at": "2025-10-14T19:00:00Z"
+    },
+    "bill_split_item": {
+      "item_id": "item_789",
+      "bill_id": "bill_456",
+      "user_id": "user_123",
+      "amount": 125.00,
+      "is_paid": false,
+      "paid_at": null,
+      "notes": "Share for dinner",
+      "created_at": "2025-10-14T19:00:00Z"
+    },
+    "bill_split_transaction": {
+      "transaction_id": "txn_101",
+      "user_id": "user_123",
+      "bill_id": "bill_456",
+      "amount": 125.00,
+      "type": "payment",
+      "status": "completed",
+      "created_at": "2025-10-14T20:15:00Z"
+    }
+  }
+}
+
+

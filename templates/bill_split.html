@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bill Splitting - Finance Tracker</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <h1>Finance Tracker</h1>
+            <nav class="menu">
+                <a href="{% url 'landing' %}">Home</a>
+                <a href="{% url 'all_transactions' %}">Transactions</a>
+                <a href="{% url 'cash' %}">Cash</a>
+                <a href="{% url 'ai_agent' %}">AI Assistant</a>
+                <a href="{% url 'bill_split_home' %}" class="active">Bill Split</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="bill-split-section">
+            <h2>💰 Bill Splitting</h2>
+            
+            <!-- Add Person Form -->
+            <div class="card">
+                <h3>👥 Add Person</h3>
+                <form method="post" action="{% url 'add_person' %}">
+                    {% csrf_token %}
+                    <div class="form-row">
+                        <label>
+                            Name *
+                            <input type="text" name="name" required placeholder="John Doe">
+                        </label>
+                        <label>
+                            UPI ID *
+                            <input type="text" name="upi_id" required placeholder="john@paytm">
+                        </label>
+                    </div>
+                    <div class="form-row">
+                        <label>
+                            Phone
+                            <input type="tel" name="phone" placeholder="+91 9876543210">
+                        </label>
+                        <label>
+                            Email
+                            <input type="email" name="email" placeholder="john@example.com">
+                        </label>
+                    </div>
+                    <button type="submit" class="btn-primary">Add Person</button>
+                </form>
+            </div>
+
+            <!-- Create New Bill -->
+            <div class="card">
+                <h3>📝 Create New Bill</h3>
+                <form method="post" action="{% url 'create_bill_split' %}">
+                    {% csrf_token %}
+                    <div class="form-row">
+                        <label>
+                            Bill Title *
+                            <input type="text" name="title" required placeholder="Dinner at Restaurant">
+                        </label>
+                        <label>
+                            Total Amount *
+                            <input type="number" name="total_amount" step="0.01" required placeholder="500.00">
+                        </label>
+                    </div>
+                    <label>
+                        Description
+                        <textarea name="description" placeholder="Optional description"></textarea>
+                    </label>
+                    
+                    <div class="split-type-section">
+                        <label>
+                            Split Type
+                            <select name="split_type" id="split-type" onchange="toggleCustomAmounts()">
+                                <option value="equal">Equal Split</option>
+                                <option value="custom">Custom Amounts</option>
+                            </select>
+                        </label>
+                    </div>
+
+                    <div class="people-section">
+                        <h4>Select People:</h4>
+                        {% if people %}
+                            <div class="people-grid">
+                                {% for person in people %}
+                                    <label class="person-checkbox">
+                                        <input type="checkbox" name="people" value="{{ person.pk }}" onchange="updateCustomAmounts()">
+                                        <span class="person-info">
+                                            <strong>{{ person.name }}</strong><br>
+                                            <small>{{ person.upi_id }}</small>
+                                        </span>
+                                        <div class="custom-amount" style="display: none;">
+                                            <input type="number" name="custom_amounts" step="0.01" placeholder="0.00" onchange="validateCustomAmounts()">
+                                        </div>
+                                    </label>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <p class="no-people">No people added yet. Add people above to create bills.</p>
+                        {% endif %}
+                    </div>
+                    
+                    <button type="submit" class="btn-primary" {% if not people %}disabled{% endif %}>Create Bill Split</button>
+                </form>
+            </div>
+
+            <!-- Recent Transactions -->
+            {% if recent_transactions %}
+            <div class="card">
+                <h3>💳 Recent Transactions (Create Bill)</h3>
+                <div class="transactions-list">
+                    {% for tx in recent_transactions %}
+                        <div class="transaction-item">
+                            <div class="tx-info">
+                                <strong>{{ tx.description }}</strong>
+                                <span class="amount expense">${{ tx.amount|floatformat:2 }}</span>
+                            </div>
+                            <div class="tx-actions">
+                                <a href="{% url 'create_bill_from_transaction' tx.pk %}" class="btn-secondary">Split This Bill</a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Recent Bills -->
+            {% if recent_bills %}
+            <div class="card">
+                <h3>📋 Recent Bills</h3>
+                <div class="bills-list">
+                    {% for bill in recent_bills %}
+                        <div class="bill-item">
+                            <div class="bill-info">
+                                <strong>{{ bill.title }}</strong>
+                                <span class="amount">${{ bill.total_amount|floatformat:2 }}</span>
+                            </div>
+                            <div class="bill-meta">
+                                <small>{{ bill.split_count }} people • {{ bill.created_at|date:"M d, Y" }}</small>
+                            </div>
+                            <div class="bill-actions">
+                                <a href="{% url 'bill_split_detail' bill.pk %}" class="btn-primary">View Details</a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">© {{ now|default:2025 }} Finance Tracker</div>
+    </footer>
+
+    <script>
+        function toggleCustomAmounts() {
+            const splitType = document.getElementById('split-type').value;
+            const customAmounts = document.querySelectorAll('.custom-amount');
+            const checkboxes = document.querySelectorAll('input[name="people"]');
+            
+            if (splitType === 'custom') {
+                customAmounts.forEach(div => div.style.display = 'block');
+            } else {
+                customAmounts.forEach(div => div.style.display = 'none');
+            }
+            
+            updateCustomAmounts();
+        }
+
+        function updateCustomAmounts() {
+            const splitType = document.getElementById('split-type').value;
+            const totalAmount = parseFloat(document.querySelector('input[name="total_amount"]').value) || 0;
+            const checkedBoxes = document.querySelectorAll('input[name="people"]:checked');
+            
+            if (splitType === 'equal' && checkedBoxes.length > 0) {
+                const amountPerPerson = totalAmount / checkedBoxes.length;
+                checkedBoxes.forEach((checkbox, index) => {
+                    const customInput = checkbox.closest('.person-checkbox').querySelector('input[name="custom_amounts"]');
+                    if (customInput) {
+                        customInput.value = amountPerPerson.toFixed(2);
+                    }
+                });
+            }
+        }
+
+        function validateCustomAmounts() {
+            const totalAmount = parseFloat(document.querySelector('input[name="total_amount"]').value) || 0;
+            const customInputs = document.querySelectorAll('input[name="custom_amounts"]');
+            let sum = 0;
+            
+            customInputs.forEach(input => {
+                if (input.value) {
+                    sum += parseFloat(input.value) || 0;
+                }
+            });
+            
+            if (Math.abs(sum - totalAmount) > 0.01) {
+                console.warn(`Custom amounts sum (${sum.toFixed(2)}) doesn't match total (${totalAmount.toFixed(2)})`);
+            }
+        }
+
+        // Update amounts when total changes
+        document.querySelector('input[name="total_amount"]').addEventListener('input', updateCustomAmounts);
+        
+        // Update amounts when people are selected/deselected
+        document.querySelectorAll('input[name="people"]').forEach(checkbox => {
+            checkbox.addEventListener('change', updateCustomAmounts);
+        });
+    </script>
+</body>
+</html>
+

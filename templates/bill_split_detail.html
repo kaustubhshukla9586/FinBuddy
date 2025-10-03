@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ bill_split.title }} - Bill Details</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <h1>Finance Tracker</h1>
+            <nav class="menu">
+                <a href="{% url 'landing' %}">Home</a>
+                <a href="{% url 'all_transactions' %}">Transactions</a>
+                <a href="{% url 'cash' %}">Cash</a>
+                <a href="{% url 'ai_agent' %}">AI Assistant</a>
+                <a href="{% url 'bill_split_home' %}" class="active">Bill Split</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="bill-detail-section">
+            <div class="bill-header">
+                <h2>{{ bill_split.title }}</h2>
+                <div class="bill-meta">
+                    <span class="total-amount">${{ bill_split.total_amount|floatformat:2 }}</span>
+                    <span class="split-type">{{ bill_split.get_split_type_display }}</span>
+                    <span class="created-date">{{ bill_split.created_at|date:"M d, Y H:i" }}</span>
+                </div>
+            </div>
+
+            {% if bill_split.description %}
+            <div class="card">
+                <h3>Description</h3>
+                <p>{{ bill_split.description }}</p>
+            </div>
+            {% endif %}
+
+            <!-- Split Items -->
+            <div class="card">
+                <h3>💰 Split Details</h3>
+                <div class="split-items">
+                    {% for item in split_items %}
+                        <div class="split-item {% if item.is_paid %}paid{% else %}pending{% endif %}">
+                            <div class="person-info">
+                                <strong>{{ item.person.name }}</strong>
+                                <small>{{ item.person.upi_id }}</small>
+                            </div>
+                            <div class="amount-info">
+                                <span class="amount">${{ item.amount|floatformat:2 }}</span>
+                                <button class="payment-toggle {% if item.is_paid %}paid{% else %}unpaid{% endif %}" 
+                                        onclick="togglePayment({{ item.pk }}, {{ item.is_paid|yesno:'true,false' }})">
+                                    {% if item.is_paid %}✅ Paid{% else %}⏳ Pending{% endif %}
+                                </button>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                
+                <div class="split-summary">
+                    <div class="summary-item">
+                        <span>Total Amount:</span>
+                        <span>${{ bill_split.total_amount|floatformat:2 }}</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Paid Amount:</span>
+                        <span class="paid-amount">${{ bill_split.split_items|length|add:"-1"|floatformat:2 }}</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Remaining:</span>
+                        <span class="remaining-amount">${{ bill_split.remaining_amount|floatformat:2 }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- History -->
+            {% if history %}
+            <div class="card">
+                <h3>📜 History</h3>
+                <div class="history-list">
+                    {% for entry in history %}
+                        <div class="history-item">
+                            <div class="history-meta">
+                                <span class="action">{{ entry.get_action_display }}</span>
+                                <span class="date">{{ entry.created_at|date:"M d, Y H:i" }}</span>
+                            </div>
+                            <div class="history-description">{{ entry.description }}</div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="actions">
+                <a href="{% url 'bill_split_home' %}" class="btn-secondary">← Back to Bills</a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">© {{ now|default:2025 }} Finance Tracker</div>
+    </footer>
+
+    <script>
+        function togglePayment(itemId, currentStatus) {
+            const newStatus = !currentStatus;
+            
+            fetch(`/bill-split/mark-payment/${itemId}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                },
+                body: JSON.stringify({
+                    is_paid: newStatus
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload(); // Refresh to show updated status
+                } else {
+                    alert('Error updating payment status: ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error updating payment status');
+            });
+        }
+    </script>
+</body>
+</html>
+

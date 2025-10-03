@@ -1,0 +1,69 @@
+{
+  "openai": {
+    "api_key": "sk-abcdef1234567890abcdef1234567890abcdef12",
+    "model": "gpt-3.5-turbo",
+    "max_tokens": 500,
+    "temperature": 0.7,
+    "system_prompt": "You are an expert financial advisor AI assistant. Analyze the user's financial data and provide helpful, personalized insights about their spending patterns, income, budget health, and financial recommendations. Be friendly, professional, and actionable in your advice.",
+    "analysis_categories": {
+      "spending_patterns": [
+        "Analyze spending trends over time",
+        "Identify top expense categories",
+        "Compare cash vs digital spending",
+        "Detect unusual spending patterns"
+      ],
+      "income_analysis": [
+        "Evaluate income sources",
+        "Assess income stability",
+        "Compare different income streams",
+        "Identify growth opportunities"
+      ],
+      "budget_health": [
+        "Calculate savings rate",
+        "Assess expense-to-income ratio",
+        "Evaluate financial stability",
+        "Identify budget gaps"
+      ],
+      "recommendations": [
+        "Suggest expense reductions",
+        "Recommend savings strategies",
+        "Propose investment opportunities",
+        "Identify financial goals"
+      ]
+    },
+    "transaction_keywords": {
+      "food": ["restaurant", "grocery", "food", "dining", "meal", "cafe", "pizza", "burger"],
+      "transport": ["gas", "fuel", "uber", "taxi", "bus", "train", "metro", "parking", "transport"],
+      "entertainment": ["movie", "cinema", "game", "netflix", "spotify", "entertainment", "fun"],
+      "shopping": ["store", "shop", "amazon", "ebay", "clothing", "purchase", "buy"],
+      "utilities": ["electric", "water", "internet", "phone", "utility", "bill"],
+      "healthcare": ["doctor", "hospital", "pharmacy", "medical", "health", "clinic"],
+      "education": ["school", "university", "course", "book", "education", "tuition"],
+      "housing": ["rent", "mortgage", "home", "apartment", "house", "property"]
+    },
+    "response_templates": {
+      "spending_summary": "Based on your recent transactions, I can see that your main spending categories are: {categories}. Your total expenses amount to ${total_expenses}, with {cash_percentage}% in cash transactions and {online_percentage}% in digital payments.",
+      "budget_advice": "Your current savings rate is {savings_rate}%. {advice_based_on_rate} I recommend focusing on {primary_recommendation} to improve your financial health.",
+      "category_analysis": "I noticed you spend most on {top_category} (${category_amount}). This represents {category_percentage}% of your total expenses. {category_insight}"
+    }
+  },
+  "financial_thresholds": {
+    "excellent_savings_rate": 25,
+    "good_savings_rate": 15,
+    "poor_savings_rate": 5,
+    "high_expense_ratio": 80,
+    "moderate_expense_ratio": 60,
+    "low_expense_ratio": 40
+  },
+  "insights_generation": {
+    "enable_real_time_analysis": true,
+    "update_frequency_minutes": 5,
+    "cache_insights": true,
+    "insight_categories": [
+      "spending_trends",
+      "budget_health",
+      "savings_opportunities",
+      "expense_optimization"
+    ]
+  }
+}
