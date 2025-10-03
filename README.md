@@ -47,28 +47,9 @@ It provides a **graphical dashboard** of your expenses, runs **real-time transac
 ```bash
 git clone https://github.com/your-username/finbuddy.git
 cd finbuddy
-
-A simple Django + Python project with a sample frontend for expense tracking, subscription detection, and a chatbot assistant.
-
----
-
-## 📦 Dependencies
-- Python 3.10+
-- Django 4.2+
-- pip (Python package manager)
-- Virtual environment (`venv`)
-
----
-
-## ⚙️ Setup Instructions
-
-### 1. Clone the repo
-```bash
-git clone <your-repo-url>.git
-cd <your-repo-folder>
 ```
 
-### 2. Create and activate a virtual environment
+### 2. Create and activate a virtual environment  
 
 **Linux / macOS**
 ```bash
@@ -82,35 +63,59 @@ py -3 -m venv .venv
 .venv\Scripts\Activate.ps1
 ```
 
-### 3. Install dependencies
+### 3. Install dependencies  
 ```bash
 pip install -r requirements.txt
 ```
 
-> If `requirements.txt` doesn’t exist yet, create it with:
+> If `requirements.txt` doesn’t exist yet, create it with:  
 > ```
 > Django>=4.2,<5.0
 > ```
 
-### 4. Run database migrations
+### 4. Run database migrations  
 ```bash
 python manage.py migrate
 ```
 
-### 5. Start the development server
+### 5. Start the development server  
 ```bash
 python manage.py runserver
 ```
 
-App will be available at:
+App will be available at:  
 ```
 http://127.0.0.1:8000/
 ```
 
 ---
 
+## 📦 Dependencies
+- Python 3.10+
+- Django 4.2+
+- pip (Python package manager)
+- Virtual environment (`venv`)
+
+---
+
 ## 📂 Notes
-- Add your environment variables in a `.env` file (never commit it).
-- Use `sms.json` (provided) as sample SMS data for testing.
-- Sample frontend (Django templates) is included for demo purposes.
-- Your actual frontend can be deployed separately and connected via API.
+- Add your environment variables in a `.env` file (never commit it).  
+- Use `sms.json` (provided) as sample SMS data for testing.  
+- Sample frontend (Django templates) is included for demo purposes.  
+- Your actual frontend can be deployed separately and connected via API.  
+
+---
+
+## 🤖 Machine Learning Model (Summary)
+
+FinBuddy includes an experimental **ML model** that predicts potential savings and spending insights.  
+It works on structured features like:
+
+- **Income & Earnings** → Monthly income, frequency, average credit inflows.  
+- **Spending Behavior** → Total spend, category ratios, discretionary vs essential, variability.  
+- **Lifestyle Indicators** → Number of transactions, average size, subscriptions, impulse spends.  
+- **Cash Flow Health** → EMI/debt, carry-forward balance, savings rate %.  
+- **Temporal Patterns** → Weekday vs weekend spending, seasonal spikes, post-salary burn rate.  
+
+🎯 **Target:** Estimate the **maximum possible saving** = Income – Baseline Essential Spend.  
+This helps users understand how much they *could* save by reducing non-essential expenses.  
